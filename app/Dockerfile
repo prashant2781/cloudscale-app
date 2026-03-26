@@ -1,5 +1,7 @@
+FROM node:18-alpine
+FROM nodeWORKDIR /app
 
-FROM node:18-alpinejson ./
+COPY package*.json ./
 RUN npm install --only=production
 
 COPY . .
@@ -7,7 +9,4 @@ COPY . .
 EXPOSE 8080
 
 CMD ["node", "index.js"]
-``
-
-WORKDIR /app
 
