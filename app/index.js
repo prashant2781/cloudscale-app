@@ -1,20 +1,16 @@
-
 const express = require("express");
-const express = PORT = 8080;
+const app = express();
+
+const PORT = 3000;
 
 app.get("/", (req, res) => {
-  res.send("✅ CloudScale App is running");
+  res.status(200).send("✅ CloudScale App is running");
 });
 
 app.get("/health", (req, res) => {
-  res.json({
-    status: "UP",
-    version: "v1",
-  });
+  res.status(200).json({ status: "UP" });
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`App running on port ${PORT}`);
+  console.log(`✅ App running on port ${PORT}`);
 });
-const app = express();
-
