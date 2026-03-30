@@ -1,4 +1,5 @@
 const express = require("express");
+const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 const app = express();
 
@@ -33,7 +34,28 @@ async function testDbSecretAccess() {
   }
 }
 
+async function testDynamoDBWrite() {
+  try {
+    const client = new DynamoDBClient({ region: "ap-south-1" });
+
+    const command = new PutItemCommand({
+      TableName: "cloudnova-events",
+      Item: {
+        eventId: { S: `event-${Date.now()}` },
+        type: { S: "TEST_EVENT" },
+        createdAt: { S: new Date().toISOString() }
+      }
+    });
+
+    await client.send(command);
+    console.log("✅ DynamoDB write successful");
+  } catch (err) {
+    console.error("❌ DynamoDB write failed", err.message);
+  }
+}
+
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`App running on port ${PORT}`);
-  testDbSecretAccess();
+  testDynamoDBWrite();
 });
