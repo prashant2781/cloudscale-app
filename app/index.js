@@ -16,7 +16,7 @@ async function testDbSecretAccess() {
   try {
     const client = new SecretsManagerClient({ region: "ap-south-1" });
 
-    const secretArn = "arn:aws:secretsmanager:ap-south-1:628479575897:secret:rdsdb-473155c-0b61-4b9c-b84d-5117344c43fd-ISANCE";
+    const secretArn = "rds!db-a473155c-0b61-4b9c-b84d-5117344c43fd";
 
     const response = await client.send(
       new GetSecretValueCommand({ SecretId: secretArn })
