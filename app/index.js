@@ -10,7 +10,7 @@ app.get("/", (req, res) => {
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "UP" });
 });
-
+// CI/CD test change
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ App running on port ${PORT}`);
 });
