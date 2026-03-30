@@ -14,8 +14,6 @@ env:
   ECR_REPOSITORY: cloudnova-nodejs
   ECS_CLUSTER: cloudnova-cluster
   ECS_SERVICE: cloudnova-service
-  ECS_TASK_DEFINITION: arn:aws:ecs:ap-south-1:628479575897:task-definition/cloudnova-task:1
-  CONTAINER_NAME: cloudnova-container
 
 jobs:
   deploy:
@@ -37,25 +35,15 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-            docker build -t $ECR_REPOSITORY ./app
-            docker tag $ECR_REPOSITORY:latest \
-              ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
-            docker push \
-              ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
+          docker build -t $ECR_REPOSITORY ./app
+          docker tag $ECR_REPOSITORY:latest \
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
+          docker push \
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
 
-
-      - name: Render ECS task definition
-        id: render-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
-
-      - name: Deploy ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.render-task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+      - name: Force ECS new deployment
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
+            --force-new-deployment
