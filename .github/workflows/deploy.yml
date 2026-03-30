@@ -14,7 +14,7 @@ env:
   ECR_REPOSITORY: cloudnova-nodejs
   ECS_CLUSTER: cloudnova-cluster
   ECS_SERVICE: cloudnova-service
-  ECS_TASK_DEFINITION: cloudnova-task
+  ECS_TASK_DEFINITION: cloudnova-task:1
   CONTAINER_NAME: cloudnova-container
 
 jobs:
